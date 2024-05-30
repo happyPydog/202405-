@@ -1,5 +1,6 @@
 import unittest
 import datetime
+import pytest
 
 from holiday import Holiday
 
@@ -21,3 +22,16 @@ class TestHoliday(unittest.TestCase):
 
     def given_today(self, month, day):
         self.holiday.get_today = lambda: datetime.date(2000, month, day)
+
+
+@pytest.mark.parametrize(
+    "month,day,expected",
+    [
+        (12, 25, "Merry Xmas"),
+        (11, 25, "Today is not Xmas"),
+    ],
+)
+def test_get_theme(month, day, expected):
+    holiday = Holiday()
+    holiday.get_today = lambda: datetime.date(2024, month, day)
+    assert holiday.get_theme() == expected
